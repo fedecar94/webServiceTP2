@@ -8,7 +8,7 @@ package hospital;
 
 /**
  *
- * @author User
+ * @author æææææææææææ
  */
 public class Paciente {
     private String ci;
@@ -20,7 +20,7 @@ public class Paciente {
     private String religion;
     private String raza;
     private String domicilio;
-    private String responsable;
+    
     private int telefono;
 
     /**
@@ -150,20 +150,6 @@ public class Paciente {
     }
 
     /**
-     * @return the responsable
-     */
-    public String getResponsable() {
-        return responsable;
-    }
-
-    /**
-     * @param responsable the responsable to set
-     */
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
-    }
-
-    /**
      * @return the telefono
      */
     public int getTelefono() {
@@ -176,4 +162,20 @@ public class Paciente {
     public void setTelefono(int telefono) {
         this.telefono = telefono;
     }
+    
+    @Override
+    public String toString() {
+        return "Data [ci=" + this.getCi() 
+                + ", nombre="+ this.getNombre() 
+                + ", sexo=" + this.getSexo() 
+                + ", edad"+ this.getEdad() 
+                + ", lugar_fecha_nac=" + this.getLugar_fecha_nac() 
+                + ", ocupacion=" + this.getOcupacion() 
+                + ", religion="+ this.getReligion() 
+                + ", raza=" + this.getRaza()
+                + ", domicilio=" + this.getDomicilio() 
+                + ", telefono=" + this.getTelefono()
+                + "]";
+    }
+
 }
