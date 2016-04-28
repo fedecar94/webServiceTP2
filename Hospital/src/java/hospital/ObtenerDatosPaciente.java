@@ -56,7 +56,7 @@ public class ObtenerDatosPaciente {
         histo[0].setFecha_hist(0);
         histo[0].setHospital("macumbero");
         histo[0].setSintomas("gripe");
-        
-        return Gson.tojson(histo);
+        Gson gson = new Gson();
+        return gson.toJson(histo);
     }
 }
