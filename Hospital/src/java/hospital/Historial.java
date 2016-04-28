@@ -13,11 +13,21 @@ public class Historial {
     private Integer id;
     private double fecha_hist;
     private String sintomas;
-    private String diagnosstico;
+    private String diagnostico;
     private String enfermedad;
     private String hospital;
     private String responsable;
-
+    
+    public Historial ()
+    {
+        id =0;
+        fecha_hist=0;
+        sintomas=null;
+        diagnostico=null;
+        enfermedad=null;
+        hospital=null;
+        responsable=null;
+    }
     /**
      * @return the fecha_hist
      */
@@ -46,13 +56,13 @@ public class Historial {
      * @return the diagnosstico
      */
     public String getDiagnosstico() {
-        return diagnosstico;
+        return diagnostico;
     }
     /**
      * @param diagnosstico the diagnosstico to set
      */
     public void setDiagnosstico(String diagnosstico) {
-        this.diagnosstico = diagnosstico;
+        this.diagnostico = diagnosstico;
     }
     /**
      * @return the hospital
