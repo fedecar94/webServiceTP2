@@ -25,4 +25,8 @@ public class ObtenerDatosPaciente {
     public String hello(@WebParam(name = "name") String txt) {
         return "Hello " + txt + " !";
     }
+    @WebMethod(operationName = "nombre")
+    public String nombre(@WebParam(name = "name") String txt) {
+        return "Hello " + txt + " !";
+    }
 }
