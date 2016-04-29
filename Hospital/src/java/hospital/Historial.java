@@ -10,7 +10,7 @@ package hospital;
  * @author User
  */
 public class Historial {
-    private Integer id;
+    private Integer ci_paciente;
     private double fecha_hist;
     private String sintomas;
     private String diagnostico;
@@ -20,7 +20,7 @@ public class Historial {
     
     public Historial ()
     {
-        id =0;
+        ci_paciente =0;
         fecha_hist=0;
         sintomas=null;
         diagnostico=null;
@@ -79,7 +79,7 @@ public class Historial {
     
     @Override
     public String toString() {
-        return "Data [id=" + this.getId() 
+        return "Data [ci_paciente=" + this.getCIPaciente() 
                 + ", fecha_hist=" + this.getFecha_hist() 
                 + ", sintomas=" + this.getSintomas() 
                 + ", diagnostico=" + this.getDiagnosstico() 
@@ -92,15 +92,15 @@ public class Historial {
     /**
      * @return the id
      */
-    public Integer getId() {
-        return id;
+    public Integer getCIPaciente() {
+        return ci_paciente;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCIPaciente(Integer id) {
+        this.ci_paciente = id;
     }
 
     /**

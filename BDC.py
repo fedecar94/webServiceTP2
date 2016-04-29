@@ -81,7 +81,7 @@ try:
     historiales = [Historial(**historial_info) for historial_info in r2["historiales"]]
     for historial in historiales:
 
-        t_historiales.insert(dict(ci_paciente=historial.id, hospital=historial.hospital,
+        t_historiales.insert(dict(ci_paciente=historial.ci_paciente, hospital=historial.hospital,
                                   responsable=historial.responsable, sintomas=historial.sintomas,
                                   diagnostico=historial.diagnostico, enfermedad=historial.enfermedad, fecha_hist = historial.fecha_hist))
 

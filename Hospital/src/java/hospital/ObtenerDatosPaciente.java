@@ -54,15 +54,15 @@ public class ObtenerDatosPaciente {
     Historial formateada a string json
     */
     public String historialID(@WebParam(name = "id") int id, @WebParam(name = "fecha") double fecha) {
-        String hospital ="IPS";
+        String hospital ="ips";
         Connection c=bdconnect(hospital);
         Historial histo = new Historial();
         try {
         Statement stmt = c.createStatement();
-        ResultSet rs = stmt.executeQuery( "SELECT * FROM historial where id="
+        ResultSet rs = stmt.executeQuery( "SELECT * FROM historial where ci_paciente="
                                         +id+" and fecha_hist="+fecha+";" );
         if (rs.first()==true){
-            histo.setId(id);
+            histo.setCIPaciente(id);
             histo.setResponsable(rs.getString("responsable"));
             histo.setDiagnosstico(rs.getString("diagnostico"));
             histo.setEnfermedad(rs.getString("enfermedad"));
@@ -92,15 +92,15 @@ public class ObtenerDatosPaciente {
     */
     
     public String actualizacion(@WebParam(name = "id") int id) {
-        String hospital ="IPS";
+        String hospital ="ips";
         Connection c=bdconnect(hospital);
         Historial histo = new Historial();
         try {
         Statement stmt = c.createStatement();
         ResultSet rs = stmt.executeQuery( "select * from historiales where "
-                            + "id="+id+" order by fecha_hist desc limit 1" );
+                            + "ci_paciente="+id+" order by fecha_hist desc limit 1" );
         if (rs.first()==true){
-            histo.setId(id);
+            histo.setCIPaciente(id);
             histo.setResponsable(rs.getString("responsable"));
             histo.setDiagnosstico(rs.getString("diagnostico"));
             histo.setEnfermedad(rs.getString("enfermedad"));
@@ -132,7 +132,7 @@ public class ObtenerDatosPaciente {
     
     public String historialFecha(@WebParam(name = "fecha1") Double fecha1, @WebParam(name = "fecha2") Double fecha2) {
         
-        String hospital ="IPS";
+        String hospital ="ips";
         Connection c=bdconnect(hospital);
         Historial [] histo;
         try {
@@ -153,7 +153,7 @@ public class ObtenerDatosPaciente {
             rs.first();
             while (rs.next())
             {
-                histo[i].setId(rs.getInt("id"));
+                histo[i].setCIPaciente(rs.getInt("ci_paciente"));
                 histo[i].setResponsable(rs.getString("responsable"));
                 histo[i].setDiagnosstico(rs.getString("diagnostico"));
                 histo[i].setEnfermedad(rs.getString("enfermedad"));
@@ -181,12 +181,12 @@ public class ObtenerDatosPaciente {
      */
     @WebMethod(operationName = "personaID")
     public String personaID(@WebParam(name = "id") int id) {
-        String hospital ="IPS";
+        String hospital ="ips";
         Connection c=bdconnect(hospital);
         Paciente pers = new Paciente();
         try {
         Statement stmt = c.createStatement();
-        ResultSet rs = stmt.executeQuery( "SELECT * FROM paciente where id="
+        ResultSet rs = stmt.executeQuery( "SELECT * FROM paciente where ci="
                                         +id+";" );
         if (rs.first()==true){
             pers.setCi(rs.getInt("ci"));
