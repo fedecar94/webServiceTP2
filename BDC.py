@@ -17,7 +17,7 @@ Esta clase Historial se utiliza cuando se reciben varios historiales al mismo ti
 """
 class Historial(object):
     def __init__(self, **kwargs):
-        for keyword in ["id", "fecha_hist", "sintomas", "diagnostico", "enfermedad","hospital","responsable"]:
+        for keyword in ["ci_paciente", "fecha_hist", "sintomas", "diagnostico", "enfermedad","hospital","responsable"]:
             setattr(self, keyword, kwargs[keyword])
         self.code = 0
         self.coordinates = []
