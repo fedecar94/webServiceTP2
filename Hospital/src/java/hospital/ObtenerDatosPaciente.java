@@ -9,6 +9,11 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.ejb.Stateless;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.ResultSet;
+
 import com.google.gson.Gson;
 /**
  *
@@ -17,7 +22,20 @@ import com.google.gson.Gson;
 @WebService(serviceName = "ObtenerDatosPaciente")
 @Stateless()
 public class ObtenerDatosPaciente {
-
+    public Connection bdconnect(String hospital){
+        Connection c=null;
+        try {
+         Class.forName("org.postgresql.Driver");
+         c = DriverManager
+            .getConnection("jdbc:postgresql://localhost:5432/"+hospital,
+            "postgres", "postgres");
+         
+      } catch (Exception e) {
+         e.printStackTrace();
+         System.err.println(e.getClass().getName()+": "+e.getMessage());
+         System.exit(0);
+      } return c;
+    }
     /**
      * Esta es la clase que implementan todas las funciones del web service.
      * En esta clase hay que ver como conectar con una base de datos postgres y 
@@ -26,6 +44,9 @@ public class ObtenerDatosPaciente {
      * dos lineas de cada funcion estan de ejemplo para que vean como enviar 
      * los datos. En la base de datos se guardan separadas las tablas persona
      * e historial, y van unidas usando el ci de la persona como foreign key.
+     * @param id
+     * @param fecha
+     * @return 
      */
     @WebMethod(operationName = "historialID")
     /*Esta funcion recibe el numero de cedula de la persona y la fecha del histo
@@ -33,16 +54,36 @@ public class ObtenerDatosPaciente {
     Historial formateada a string json
     */
     public String historialID(@WebParam(name = "id") int id, @WebParam(name = "fecha") double fecha) {
+        String hospital ="IPS";
+        Connection c=bdconnect(hospital);
         Historial histo = new Historial();
-        histo.setId(123);
-        histo.setResponsable("asd");
-        histo.setDiagnosstico("asdasd");
-        histo.setEnfermedad("asdsad2");
-        histo.setFecha_hist(0);
-        histo.setHospital("macumbero");
-        histo.setSintomas("gripe");
-        Gson gson = new Gson();
-        return gson.toJson(histo);
+        try {
+        Statement stmt = c.createStatement();
+        ResultSet rs = stmt.executeQuery( "SELECT * FROM historial where id="
+                                        +id+" and fecha_hist="+fecha+";" );
+        if (rs.first()==true){
+            histo.setId(id);
+            histo.setResponsable(rs.getString("responsable"));
+            histo.setDiagnosstico(rs.getString("diagnostico"));
+            histo.setEnfermedad(rs.getString("enfermedad"));
+            histo.setFecha_hist(rs.getDouble("fecha_hist"));
+            histo.setHospital(hospital);
+            histo.setSintomas(rs.getString("sintomas"));
+            rs.close();
+            stmt.close();
+            c.close();
+            Gson gson = new Gson();
+            return gson.toJson(histo);
+        }else
+            rs.close();
+            stmt.close();
+            c.close();
+            return "No existe el historial";
+        } catch ( Exception e ) {
+         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+         System.exit(0);
+        }
+        return "Error desconocido";
     }
     @WebMethod(operationName = "actualizacion")
     /*Esta funcion recibe el numero de cedula de la persona y devuelve en una 
@@ -51,8 +92,36 @@ public class ObtenerDatosPaciente {
     */
     
     public String actualizacion(@WebParam(name = "id") int id) {
-        
-        return null;
+        String hospital ="IPS";
+        Connection c=bdconnect(hospital);
+        Historial histo = new Historial();
+        try {
+        Statement stmt = c.createStatement();
+        ResultSet rs = stmt.executeQuery( "select * from historiales where "
+                            + "id="+id+" order by fecha_hist desc limit 1" );
+        if (rs.first()==true){
+            histo.setId(id);
+            histo.setResponsable(rs.getString("responsable"));
+            histo.setDiagnosstico(rs.getString("diagnostico"));
+            histo.setEnfermedad(rs.getString("enfermedad"));
+            histo.setFecha_hist(rs.getDouble("fecha_hist"));
+            histo.setHospital(hospital);
+            histo.setSintomas(rs.getString("sintomas"));
+            rs.close();
+            stmt.close();
+            c.close();
+            Gson gson = new Gson();
+            return gson.toJson(histo);
+        }else
+            rs.close();
+            stmt.close();
+            c.close();
+            return "No existe el historial";
+        } catch ( Exception e ) {
+         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+         System.exit(0);
+        }
+        return "Error desconocido";
     }
 
     @WebMethod(operationName = "historialFecha")
@@ -62,27 +131,48 @@ public class ObtenerDatosPaciente {
      */
     
     public String historialFecha(@WebParam(name = "fecha1") Double fecha1, @WebParam(name = "fecha2") Double fecha2) {
-        Historial [] histo = new Historial[2];
-        histo[1] = new Historial();
-        histo[1].setId(123);
-        histo[1].setResponsable("asd");
-        histo[1].setDiagnosstico("asdasd");
-        histo[1].setEnfermedad("asdsad2");
-        histo[1].setFecha_hist(0);
-        histo[1].setHospital("macumbero");
-        histo[1].setSintomas("gripe");
-        histo[0] = new Historial();
-
-        histo[0].setId(123);
-        histo[0].setResponsable("asd");
-        histo[0].setDiagnosstico("asdasd");
-        histo[0].setEnfermedad("asdsad2");
-        histo[0].setFecha_hist(0);
-        histo[0].setHospital("macumbero");
-        histo[0].setSintomas("gripe");
-        Gson gson = new Gson();
         
-        return gson.toJson(histo);
+        String hospital ="IPS";
+        Connection c=bdconnect(hospital);
+        Historial [] histo;
+        try {
+        Statement stmt = c.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM historial where fecha_hist "
+                                        + "between "+fecha1+" and "+fecha2+";" );
+        if (rs.first()==false){
+            rs.close();
+            stmt.close();
+            c.close();
+            return "No existen los historiales";
+        }else{
+            int i=0;
+            while (rs.next()){
+                i++;
+            }
+            histo = new Historial[i];
+            rs.first();
+            while (rs.next())
+            {
+                histo[i].setId(rs.getInt("id"));
+                histo[i].setResponsable(rs.getString("responsable"));
+                histo[i].setDiagnosstico(rs.getString("diagnostico"));
+                histo[i].setEnfermedad(rs.getString("enfermedad"));
+                histo[i].setFecha_hist(rs.getDouble("fecha_hist"));
+                histo[i].setHospital(hospital);
+                histo[i].setSintomas(rs.getString("sintomas"));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+            Gson gson = new Gson();
+            return gson.toJson(histo);
+        }
+        } catch ( Exception e ) {
+         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+         System.exit(0);
+        }
+        
+        return "Error desconocido";
     }
 
     /**
@@ -91,7 +181,38 @@ public class ObtenerDatosPaciente {
      */
     @WebMethod(operationName = "personaID")
     public String personaID(@WebParam(name = "id") int id) {
-        //TODO write your implementation code here:
-        return null;
+        String hospital ="IPS";
+        Connection c=bdconnect(hospital);
+        Paciente pers = new Paciente();
+        try {
+        Statement stmt = c.createStatement();
+        ResultSet rs = stmt.executeQuery( "SELECT * FROM paciente where id="
+                                        +id+";" );
+        if (rs.first()==true){
+            pers.setCi(rs.getInt("ci"));
+            pers.setNombre(rs.getString("nombre"));
+            pers.setDomicilio(rs.getString("domicilio"));
+            pers.setEdad(rs.getInt("edad"));
+            pers.setLugar_fecha_nac(rs.getString("lugar_fecha_nac"));
+            pers.setOcupacion(rs.getString("ocupacion"));
+            pers.setRaza(rs.getString("raza"));
+            pers.setReligion(rs.getString("religion"));
+            pers.setSexo(rs.getString("sexo"));
+            pers.setTelefono(rs.getInt("telefono"));
+            rs.close();
+            stmt.close();
+            c.close();
+            Gson gson = new Gson();
+            return gson.toJson(pers);
+        }else
+            rs.close();
+            stmt.close();
+            c.close();
+            return "No existe la persona";
+        } catch ( Exception e ) {
+         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+         System.exit(0);
+        }
+        return "Error desconocido";
     }
 }

@@ -11,7 +11,7 @@ package hospital;
  * @author æææææææææææ
  */
 public class Paciente {
-    private String ci;
+    private int ci;
     private String nombre;
     private String sexo;
     private int edad;
@@ -26,14 +26,14 @@ public class Paciente {
     /**
      * @return the ci
      */
-    public String getCi() {
+    public int getCi() {
         return ci;
     }
 
     /**
      * @param ci the ci to set
      */
-    public void setCi(String ci) {
+    public void setCi(int ci) {
         this.ci = ci;
     }
 

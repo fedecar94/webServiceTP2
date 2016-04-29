@@ -49,6 +49,7 @@ try:
     La seccion de abajo se usa para solicitar los datos de una persona cuando la BD central no los tiene.
     Solo se ejecuta una vez por persona.
     """
+
     result = db.query('select exists(select 1 from tabla_paciente where id='+str(id)+')')
     for row in result:
         check= row['exists']
@@ -69,7 +70,7 @@ try:
 
     t_historiales.insert(dict(ci_paciente= id, hospital=r1['hospital'],
                               responsable= r1['responsable'], sintomas=r1['sintomas'],
-                              diagnostico= r1['diagnostico'], enfermedad= r1['enfermedad']))
+                              diagnostico= r1['diagnostico'], enfermedad= r1['enfermedad'], fecha_hist=r1['fecha_hist']))
 
 
     """
@@ -82,7 +83,7 @@ try:
 
         t_historiales.insert(dict(ci_paciente=historial.id, hospital=historial.hospital,
                                   responsable=historial.responsable, sintomas=historial.sintomas,
-                                  diagnostico=historial.diagnostico, enfermedad=historial.enfermedad))
+                                  diagnostico=historial.diagnostico, enfermedad=historial.enfermedad, fecha_hist = historial.fecha_hist))
 
     """
     La seccion de abajo se usa para solicitar el ultimo historial de la persona segun su CI.
@@ -91,7 +92,7 @@ try:
 
     t_historiales.insert(dict(ci_paciente=id, hospital=r3['hospital'],
                               responsable=r3['responsable'], sintomas=r3['sintomas'],
-                              diagnostico=r3['diagnostico'], enfermedad=r3['enfermedad']))
+                              diagnostico=r3['diagnostico'], enfermedad=r3['enfermedad'], fecha_hist=r3['fecha_hist']))
 
 
 except WebFault, f:
