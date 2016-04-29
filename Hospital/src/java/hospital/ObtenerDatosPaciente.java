@@ -19,10 +19,20 @@ import com.google.gson.Gson;
 public class ObtenerDatosPaciente {
 
     /**
-     * This is a sample web service operation
+     * Esta es la clase que implementan todas las funciones del web service.
+     * En esta clase hay que ver como conectar con una base de datos postgres y 
+     * sacar de ahi los datos que pide cada funcion, y retornar como un string.
+     * al retornar, el string tiene que tener el formato de gson, las ultimas 
+     * dos lineas de cada funcion estan de ejemplo para que vean como enviar 
+     * los datos. En la base de datos se guardan separadas las tablas persona
+     * e historial, y van unidas usando el ci de la persona como foreign key.
      */
     @WebMethod(operationName = "historialID")
-    public String hello(@WebParam(name = "name") String txt) {
+    /*Esta funcion recibe el numero de cedula de la persona y la fecha del histo
+    solicitado. Busca estos dos en la base de datos y los devuelve en una clase 
+    Historial formateada a string json
+    */
+    public String historialID(@WebParam(name = "id") int id, @WebParam(name = "fecha") double fecha) {
         Historial histo = new Historial();
         histo.setId(123);
         histo.setResponsable("asd");
@@ -34,20 +44,23 @@ public class ObtenerDatosPaciente {
         Gson gson = new Gson();
         return gson.toJson(histo);
     }
-
-    /**
-     * Web service operation
-     */
     @WebMethod(operationName = "actualizacion")
-    public String getHistorialID(@WebParam(name = "ID") int ID) {
+    /*Esta funcion recibe el numero de cedula de la persona y devuelve en una 
+    clase Historial formateada a string json el ultimo historial que esta en la
+    base de datos de esa persona
+    */
+    
+    public String actualizacion(@WebParam(name = "id") int id) {
         
         return null;
     }
 
-    /**
-     * Web service operation
-     */
     @WebMethod(operationName = "historialFecha")
+    /**
+     * Esta funcion recibe dos fechas y devuelve una lista de todos los historia
+     * les entre esas dos fechas
+     */
+    
     public String historialFecha(@WebParam(name = "fecha1") Double fecha1, @WebParam(name = "fecha2") Double fecha2) {
         Historial [] histo = new Historial[2];
         histo[1] = new Historial();
@@ -70,5 +83,15 @@ public class ObtenerDatosPaciente {
         Gson gson = new Gson();
         
         return gson.toJson(histo);
+    }
+
+    /**
+     * Esta funcion recibe la cedula de identidad de la persona y devuelve los 
+     * datos personales de la persona en un string json
+     */
+    @WebMethod(operationName = "personaID")
+    public String personaID(@WebParam(name = "id") int id) {
+        //TODO write your implementation code here:
+        return null;
     }
 }
