@@ -28,10 +28,16 @@ class Historial(object):
                     for k, v in self.__dict__.items() if not k.startswith("_")]
         return "{}(\n{})".format(self.__class__.__name__, '\n'.join(fields))
 
+from suds.wsse import *
+
 
 try:
     url = 'http://localhost:8080/ObtenerDatosPaciente/ObtenerDatosPaciente?wsdl'
     client = Client(url)
+    client.set_options(timeout= 300)
+    userid = 'Ruben'
+    password = 'admin'
+
     """
     id y las fechas son datos de prueba, se debe solicitar al usuario ingresar el numero de ci a usar como id.
     Ademas se debe hacer un menu para poder elegir las opciones de consulta y tambien elegir el hospital al que
@@ -41,6 +47,7 @@ try:
     fecha = 1461169733.0
     fecha1 = fecha
     fecha2 = 1461969754.0
+
 
     t_paciente= db['tabla_paciente']
     t_historiales=db['historiales']
@@ -56,7 +63,7 @@ try:
     if check==True:
         print "Ya existen los datos personales de ese paciente en la BD"
     else:
-        r1 = client.service.personaID(id)
+        r1 = client.service.personaID(id, userid, password)
         if r1 == 'No existe el paciente':
             print r1
         else:
@@ -69,7 +76,7 @@ try:
     """
     La seccion de abajo se usa para solicitar un historial segun la CI de la persona y la fecha deseada
     """
-    r2=client.service.historialID(id, fecha)
+    r2=client.service.historialID(id, fecha, userid, password)
     if r2=='No existe el historial':
         print r2
     else:
@@ -83,7 +90,7 @@ try:
     """
     La seccion de abajo se usa para solicitar los historiales en un rango de fechas.
     """
-    r2=client.service.historialFecha(fecha1, fecha2)
+    r2=client.service.historialFecha(fecha1, fecha2, userid, password)
     if r2=="No existen los historiales":
         print r2
     else:
@@ -99,7 +106,7 @@ try:
     """
     La seccion de abajo se usa para solicitar el ultimo historial de la persona segun su CI.
     """
-    r1 = client.service.actualizacion(id)
+    r1 = client.service.actualizacion(id, userid, password)
 
     if r1 == 'No existe el historial':
         print r1

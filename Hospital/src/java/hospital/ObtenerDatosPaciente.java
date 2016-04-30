@@ -9,13 +9,7 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.ejb.Stateless;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.sql.ResultSet;
 
-
-import com.google.gson.Gson;
 /**
  *
  * @author tekor
@@ -23,6 +17,7 @@ import com.google.gson.Gson;
 @WebService(serviceName = "ObtenerDatosPaciente")
 @Stateless()
 public class ObtenerDatosPaciente {
+    String [] username = new String [2];
     
     /**
      * Esta es la clase que implementan todas las funciones del web service.
@@ -41,7 +36,8 @@ public class ObtenerDatosPaciente {
     solicitado. Busca estos dos en la base de datos y los devuelve en una clase 
     Historial formateada a string json
     */
-    public String historialID(@WebParam(name = "id") int id, @WebParam(name = "fecha") double fecha) {
+    public String historialID(@WebParam(name = "id") int id, @WebParam(name = "fecha") double fecha, 
+            @WebParam(name= "userid") String userid,@WebParam(name = "password") String password ) {
         return GerenciadorBD.get_hist_id(id,fecha);
     }
     @WebMethod(operationName = "actualizacion")
@@ -50,7 +46,8 @@ public class ObtenerDatosPaciente {
     base de datos de esa persona
     */
     
-    public String actualizacion(@WebParam(name = "id") int id) {
+    public String actualizacion(@WebParam(name = "id") int id, 
+            @WebParam(name= "userid") String userid,@WebParam(name = "password") String password) {
         return GerenciadorBD.get_hist_act(id);
     }
 
@@ -60,7 +57,8 @@ public class ObtenerDatosPaciente {
      * les entre esas dos fechas
      */
     
-    public String historialFecha(@WebParam(name = "fecha1") Double fecha1, @WebParam(name = "fecha2") Double fecha2) {
+    public String historialFecha(@WebParam(name = "fecha1") Double fecha1, @WebParam(name = "fecha2") Double fecha2, 
+            @WebParam(name= "userid") String userid,@WebParam(name = "password") String password) {
         
         return GerenciadorBD.get_hist_fecha(fecha1, fecha2);
     }
@@ -70,7 +68,8 @@ public class ObtenerDatosPaciente {
      * datos personales de la persona en un string json
      */
     @WebMethod(operationName = "personaID")
-    public String personaID(@WebParam(name = "id") int id) {
+    public String personaID(@WebParam(name = "id") int id, 
+            @WebParam(name= "userid") String userid,@WebParam(name = "password") String password) {
         return GerenciadorBD.get_persona_id(id);
     }
 }

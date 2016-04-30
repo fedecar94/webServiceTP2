@@ -118,7 +118,6 @@ public class GerenciadorBD {
             while (rs.next()){
                 i++;
             }
-            System.out.println(i);
             rs.close();
             
             Historial [] histo = new Historial[i];
