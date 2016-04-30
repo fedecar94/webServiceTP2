@@ -37,10 +37,10 @@ try:
     Ademas se debe hacer un menu para poder elegir las opciones de consulta y tambien elegir el hospital al que
     quiere consultar
     """
-    id=333
-    fecha = 123.0
+    id=1234567
+    fecha = 1461169733.0
     fecha1 = fecha
-    fecha2 = 123.7
+    fecha2 = 1461969753.0
 
     t_paciente= db['tabla_paciente']
     t_historiales=db['historiales']
@@ -50,7 +50,7 @@ try:
     Solo se ejecuta una vez por persona.
     """
 
-    result = db.query('select exists(select 1 from tabla_paciente where id='+str(id)+')')
+    result = db.query('select exists(select 1 from tabla_paciente where ci='+str(id)+')')
     for row in result:
         check= row['exists']
     if check==False:
@@ -75,7 +75,7 @@ try:
 
     """
     La seccion de abajo se usa para solicitar los historiales en un rango de fechas.
-    """
+    """"""
     r2=json.loads('{"historiales":'+client.service.historialFecha(fecha1, fecha2)+'}')
 
     historiales = [Historial(**historial_info) for historial_info in r2["historiales"]]
@@ -85,10 +85,10 @@ try:
                                   responsable=historial.responsable, sintomas=historial.sintomas,
                                   diagnostico=historial.diagnostico, enfermedad=historial.enfermedad, fecha_hist = historial.fecha_hist))
 
-    """
+
     La seccion de abajo se usa para solicitar el ultimo historial de la persona segun su CI.
     """
-    r3=client.service.actualizacion(id)
+    r3=json.loads(client.service.actualizacion(id))
 
     t_historiales.insert(dict(ci_paciente=id, hospital=r3['hospital'],
                               responsable=r3['responsable'], sintomas=r3['sintomas'],
