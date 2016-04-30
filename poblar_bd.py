@@ -1,18 +1,18 @@
 import dataset 
 import sys
 
-db1 = dataset.connect('postgresql://postgres:postgres@localhost:5432/sd_ips')
-db2 = dataset.connect('postgresql://postgres:postgres@localhost:5432/sd_bautista')
-db3 = dataset.connect('postgresql://postgres:postgres@localhost:5432/sd_migone')
+db1 = dataset.connect('postgresql://postgres:postgres@localhost:5432/ips')
+db2 = dataset.connect('postgresql://postgres:postgres@localhost:5432/bautista')
+db3 = dataset.connect('postgresql://postgres:postgres@localhost:5432/migone')
 
 
 #Crear tabla pacientes e insertar datos en la tabla del hospital_1
 
 db1.create_table('paciente', primary_id='ci', primary_type='Integer')
 table1 = db1['paciente']
-data = dict(ci=1234567, edad=45, lugar_fecha_nac='Caaguazu', ocupacion='Docente', religion='Catolico', raza='Latino', domicilio='San Lorenzo', telefono=987456321 )
+data = dict(ci=1234567, sexo='Masculino', nombre='Marcos Aseretto', edad=45, lugar_fecha_nac='Caaguazu', ocupacion='Docente', religion='Catolico', raza='Latino', domicilio='San Lorenzo', telefono=987456321 )
 table1.insert(data)
-data = dict(ci=6541234, edad=16, lugar_fecha_nac='Asuncion', ocupacion='Estudiante', religion='Judio', raza='Asiatico', domicilio='San Antonio', telefono=985123963 )
+data = dict(ci=6541234, sexo='Femenino', nombre='Julia Gonzalez', edad=16, lugar_fecha_nac='Asuncion', ocupacion='Estudiante', religion='Judio', raza='Asiatico', domicilio='San Antonio', telefono=985123963 )
 table1.insert(data)
 
 res = db1.query('CREATE TABLE historial (ci_paciente integer REFERENCES paciente (ci))')
@@ -33,9 +33,9 @@ table1.insert(data)
 #Crear tabla pacientes e insertar datos en la tabla del hospital_2
 db2.create_table('paciente', primary_id='ci', primary_type='Integer')
 table2 = db2['paciente']
-data = dict(ci=7412589, edad=11, lugar_fecha_nac='Encarnacion', ocupacion='Estudiante', religion='Protestante', raza='Latino', domicilio='Encarnacion', telefono=983124697 )
+data = dict(ci=7412589, sexo='Masculino', nombre='Pedro Dominguez',  edad=11, lugar_fecha_nac='Encarnacion', ocupacion='Estudiante', religion='Protestante', raza='Latino', domicilio='Encarnacion', telefono=983124697 )
 table2.insert(data)
-data = dict(ci=3357159, edad=29, lugar_fecha_nac='Asuncion', ocupacion='Electricista', religion='Catolico', raza='Latino', domicilio='San Lorenzo', telefono=981357159 )
+data = dict(ci=3357159, sexo='Masculino', nombre='Jose Pereira',  edad=29, lugar_fecha_nac='Asuncion', ocupacion='Electricista', religion='Catolico', raza='Latino', domicilio='San Lorenzo', telefono=981357159 )
 table2.insert(data)
 
 res = db2.query('CREATE TABLE historial (ci_paciente integer REFERENCES paciente (ci))')
@@ -56,9 +56,9 @@ table2.insert(data)
 #Crear tabla pacientes e insertar datos en la tabla del hospital_3
 db3.create_table('paciente', primary_id='ci', primary_type='Integer')
 table3 = db3['paciente']
-data = dict(ci=3124598, edad=26, lugar_fecha_nac='Asuncion', ocupacion='Futbolista', religion='Catolico', raza='Asiatico', domicilio='Fernando de la Mora', telefono=985534912 )
+data = dict(ci=3124598, sexo='Femenino', nombre='Francisca Garay',  edad=26, lugar_fecha_nac='Asuncion', ocupacion='Futbolista', religion='Catolico', raza='Asiatico', domicilio='Fernando de la Mora', telefono=985534912 )
 table3.insert(data)
-data = dict(ci=999536, edad=80, lugar_fecha_nac='Coronel Oviedo', ocupacion='Artesano', religion='Catolico', raza='Latino', domicilio='Coronel Oviedo', telefono=961479312 )
+data = dict(ci=999536, sexo='Femenino', nombre='Rene Peralta',  edad=80, lugar_fecha_nac='Coronel Oviedo', ocupacion='Artesano', religion='Catolico', raza='Latino', domicilio='Coronel Oviedo', telefono=961479312 )
 table3.insert(data)
 
 res = db3.query('CREATE TABLE historial (ci_paciente integer REFERENCES paciente (ci))')
