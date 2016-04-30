@@ -4,6 +4,11 @@ import sys
 db1 = dataset.connect('postgresql://postgres:postgres@localhost:5432/ips')
 db2 = dataset.connect('postgresql://postgres:postgres@localhost:5432/bautista')
 db3 = dataset.connect('postgresql://postgres:postgres@localhost:5432/migone')
+db4 = dataset.connect('postgresql://postgres:postgres@localhost:5432/hospitales')
+
+db4.create_table('tabla_paciente', primary_id='ci', primary_type='Integer')
+
+
 
 
 #Crear tabla pacientes e insertar datos en la tabla del hospital_1

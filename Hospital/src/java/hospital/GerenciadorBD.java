@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package hospital;
-
 import com.google.gson.Gson;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class GerenciadorBD {
         if (rs.next()==true){
             histo.setCIPaciente(id);
             histo.setResponsable(rs.getString("responsable"));
-            histo.setDiagnosstico(rs.getString("diagnostico"));
+            histo.setDiagnostico(rs.getString("diagnostico"));
             histo.setEnfermedad(rs.getString("enfermedad"));
             histo.setFecha_hist(rs.getDouble("fecha_hist"));
             histo.setHospital(hospital);
@@ -74,7 +73,7 @@ public class GerenciadorBD {
         if (rs.next()==true){
             histo.setCIPaciente(id);
             histo.setResponsable(rs.getString("responsable"));
-            histo.setDiagnosstico(rs.getString("diagnostico"));
+            histo.setDiagnostico(rs.getString("diagnostico"));
             histo.setEnfermedad(rs.getString("enfermedad"));
             histo.setFecha_hist(rs.getDouble("fecha_hist"));
             histo.setHospital(hospital);
@@ -99,32 +98,38 @@ public class GerenciadorBD {
     {
         String hospital ="ips";
         Connection c=bdconnect(hospital);
-        Historial [] histo;
+        
         try {
         Statement stmt = c.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM historial where fecha_hist "
                                         + "between "+fecha1+" and "+fecha2+";" );
-        if (rs.next()==false){
+        
+        if (!rs.next()){
             rs.close();
             stmt.close();
             c.close();
+            System.out.println("muere");
             return "No existen los historiales";
         }else{
             int i=0;
+            rs.close();
             rs = stmt.executeQuery("SELECT * FROM historial where fecha_hist "
                                         + "between "+fecha1+" and "+fecha2+";" );
             while (rs.next()){
                 i++;
             }
-            histo = new Historial[i];
+            System.out.println(i);
+            rs.close();
+            
+            Historial [] histo = new Historial[i];
             rs = stmt.executeQuery("SELECT * FROM historial where fecha_hist "
                                         + "between "+fecha1+" and "+fecha2+";" );
             i=0;
             while (rs.next())
-            {
+            {   histo[i]= new Historial();
                 histo[i].setCIPaciente(rs.getInt("ci_paciente"));
                 histo[i].setResponsable(rs.getString("responsable"));
-                histo[i].setDiagnosstico(rs.getString("diagnostico"));
+                histo[i].setDiagnostico(rs.getString("diagnostico"));
                 histo[i].setEnfermedad(rs.getString("enfermedad"));
                 histo[i].setFecha_hist(rs.getDouble("fecha_hist"));
                 histo[i].setHospital(hospital);
@@ -138,7 +143,7 @@ public class GerenciadorBD {
             return gson.toJson(histo);
         }
         } catch ( Exception e ) {
-         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+         System.err.println( e.getClass().getName()+": "+ e.getMessage());
          System.exit(0);
         }
         

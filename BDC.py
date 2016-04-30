@@ -40,7 +40,7 @@ try:
     id=1234567
     fecha = 1461169733.0
     fecha1 = fecha
-    fecha2 = 1461969753.0
+    fecha2 = 1461969754.0
 
     t_paciente= db['tabla_paciente']
     t_historiales=db['historiales']
@@ -53,46 +53,62 @@ try:
     result = db.query('select exists(select 1 from tabla_paciente where ci='+str(id)+')')
     for row in result:
         check= row['exists']
-    if check==False:
-        "Ya existen los datos personales de ese paciente en la BD"
+    if check==True:
+        print "Ya existen los datos personales de ese paciente en la BD"
     else:
-        r1=json.loads(client.service.personaID(id))
-
-        t_paciente.insert(dict(ci= id, nombre = r1['nombre'],sexo= r1['sexo'], edad=r1['edad'],
-                                  lugar_fecha_nac= r1['lugar_fecha_nac'], ocupacion= r1['ocupacion'],
-                                  religion=r1['religion'], raza= r1['raza'], domicilio= ['domicilio'],
-                                   telefono= ['telefono']))
+        r1 = client.service.personaID(id)
+        if r1 == 'No existe el paciente':
+            print r1
+        else:
+            r=json.loads(r1)
+            t_paciente.insert(dict(ci= id, nombre = r['nombre'],sexo= r['sexo'], edad=r['edad'],
+                                      lugar_fecha_nac= r['lugar_fecha_nac'], ocupacion= r['ocupacion'],
+                                      religion=r['religion'], raza= r['raza'], domicilio= r['domicilio'],
+                                       telefono= r['telefono']))
 
     """
     La seccion de abajo se usa para solicitar un historial segun la CI de la persona y la fecha deseada
     """
-    r1=json.loads(client.service.historialID(id, fecha))
+    r2=client.service.historialID(id, fecha)
+    if r2=='No existe el historial':
+        print r2
+    else:
+        r = json.loads(r2)
 
-    t_historiales.insert(dict(ci_paciente= id, hospital=r1['hospital'],
-                              responsable= r1['responsable'], sintomas=r1['sintomas'],
-                              diagnostico= r1['diagnostico'], enfermedad= r1['enfermedad'], fecha_hist=r1['fecha_hist']))
+        t_historiales.insert(dict(ci_paciente= id, hospital=r['hospital'],
+                                  responsable= r['responsable'], sintomas=r['sintomas'],
+                                  diagnostico= r['diagnostico'], enfermedad= r['enfermedad'], fecha_hist=r['fecha_hist']))
 
 
     """
     La seccion de abajo se usa para solicitar los historiales en un rango de fechas.
-    """"""
-    r2=json.loads('{"historiales":'+client.service.historialFecha(fecha1, fecha2)+'}')
+    """
+    r2=client.service.historialFecha(fecha1, fecha2)
+    if r2=="No existen los historiales":
+        print r2
+    else:
+        r = json.loads('{"historiales":' + r2 + '}')
 
-    historiales = [Historial(**historial_info) for historial_info in r2["historiales"]]
-    for historial in historiales:
+        historiales = [Historial(**historial_info) for historial_info in r["historiales"]]
+        for historial in historiales:
 
-        t_historiales.insert(dict(ci_paciente=historial.ci_paciente, hospital=historial.hospital,
-                                  responsable=historial.responsable, sintomas=historial.sintomas,
-                                  diagnostico=historial.diagnostico, enfermedad=historial.enfermedad, fecha_hist = historial.fecha_hist))
+            t_historiales.insert(dict(ci_paciente=historial.ci_paciente, hospital=historial.hospital,
+                                      responsable=historial.responsable, sintomas=historial.sintomas,
+                                      diagnostico=historial.diagnostico, enfermedad=historial.enfermedad, fecha_hist = historial.fecha_hist))
 
-
+    """
     La seccion de abajo se usa para solicitar el ultimo historial de la persona segun su CI.
     """
-    r3=json.loads(client.service.actualizacion(id))
+    r1 = client.service.actualizacion(id)
 
-    t_historiales.insert(dict(ci_paciente=id, hospital=r3['hospital'],
-                              responsable=r3['responsable'], sintomas=r3['sintomas'],
-                              diagnostico=r3['diagnostico'], enfermedad=r3['enfermedad'], fecha_hist=r3['fecha_hist']))
+    if r1 == 'No existe el historial':
+        print r1
+    else:
+        r3=json.loads(r1)
+
+        t_historiales.insert(dict(ci_paciente=id, hospital=r3['hospital'],
+                                  responsable=r3['responsable'], sintomas=r3['sintomas'],
+                                  diagnostico=r3['diagnostico'], enfermedad=r3['enfermedad'], fecha_hist=r3['fecha_hist']))
 
 
 except WebFault, f:

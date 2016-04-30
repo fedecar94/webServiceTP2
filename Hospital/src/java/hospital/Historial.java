@@ -55,14 +55,14 @@ public class Historial {
     /**
      * @return the diagnosstico
      */
-    public String getDiagnosstico() {
+    public String getDiagnostico() {
         return diagnostico;
     }
     /**
      * @param diagnosstico the diagnosstico to set
      */
-    public void setDiagnosstico(String diagnosstico) {
-        this.diagnostico = diagnosstico;
+    public void setDiagnostico(String diagnostico) {
+        this.diagnostico = diagnostico;
     }
     /**
      * @return the hospital
@@ -82,7 +82,7 @@ public class Historial {
         return "Data [ci_paciente=" + this.getCIPaciente() 
                 + ", fecha_hist=" + this.getFecha_hist() 
                 + ", sintomas=" + this.getSintomas() 
-                + ", diagnostico=" + this.getDiagnosstico() 
+                + ", diagnostico=" + this.getDiagnostico() 
                 + ", enfermedad=" + this.getEnfermedad()
                 + ", hospital=" + this.getHospital() 
                 + ", responsable=" +this.getResponsable()
