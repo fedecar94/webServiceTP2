@@ -8,15 +8,16 @@ import logging
 import traceback as tb
 import suds.metrics as metrics
 from suds import WebFault
+import threading
 from suds.client import Client
 from suds.wsse import *
 from datetime import datetime
 import time
 import json
 
-"""datos que no se modificaran para simplificar la DEMO"""
-userid = 'Ruben'
-password = 'admin'
+
+userid = "admin"
+password = "admin"
 db = dataset.connect('postgresql://postgres:postgres@localhost:5432/hospitales')
 
 
@@ -38,7 +39,8 @@ class Historial(object):
         return "{}(\n{})".format(self.__class__.__name__, '\n'.join(fields))
 
 
-def datos(id):
+def datos(id, client):
+    t_paciente = db['tabla_paciente']
     try:
         result = db.query('select exists(select 1 from tabla_paciente where ci=' + str(id) + ')')
         for row in result:
@@ -68,6 +70,8 @@ def datos(id):
 
 
 def conectar():
+    userid = raw_input("Userid: ")
+    password = raw_input("Contrasena: ")
     ip = str(raw_input("ip del hospital a conectar: "))
     url = 'http://' + ip + ':8080/ObtenerDatosPaciente/ObtenerDatosPaciente?wsdl'
     client = Client(url)
@@ -86,7 +90,7 @@ def paciente():
     id = input("CI: ")
     if id == 0:
         main()
-    while(datos(id)):
+    while(datos(id, client)):
         print "CI del paciente a consultar, ejemplo 1234567"
         print "ingrese 0 para volver al menu"
         id = input("CI: ")
@@ -101,6 +105,7 @@ def paciente():
     if r2 == 'No existe el historial':
         print r2
     else:
+        t_historiales = db['historiales']
         r = json.loads(r2)
         print "carga exitosa"
         t_historiales.insert(dict(ci_paciente=id, hospital=r['hospital'],
@@ -127,7 +132,9 @@ def tiempo():
 
 
     r2 = client.service.historialFecha(fecha1, fecha2, userid, password)
-    if r2 == "No existen los historiales":
+    if r2 == "Nombre de usuario o contrasena incorrecto/a":
+        print("Nombre de usuario o contrasena incorrecto/a")
+    elif r2 == "No existen los historiales":
         print r2
     else:
         t_historiales = db['historiales']
@@ -143,13 +150,49 @@ def tiempo():
     main()
 
 
+def automatico(client, espera):
+
+    dt = datetime(year=2010, month=12, day=21)
+    fecha1 = time.mktime(dt.timetuple())
+    fecha2 = time.time()
+
+    while True:
+        r2 = client.service.historialFecha(fecha1, fecha2, userid, password)
+        if r2 == "Nombre de usuario o contrasena incorrecto/a":
+            print("Nombre de usuario o contrasena incorrecto/a")
+        elif r2 == "No existen los historiales":
+            print("no hay historiales nuevos")
+        else:
+            t_historiales = db['historiales']
+            r = json.loads('{"historiales":' + r2 + '}')
+
+            historiales = [Historial(**historial_info) for historial_info in r["historiales"]]
+            for historial in historiales:
+                t_historiales.insert(dict(ci_paciente=historial.ci_paciente, hospital=historial.hospital,
+                                          responsable=historial.responsable, sintomas=historial.sintomas,
+                                          diagnostico=historial.diagnostico, enfermedad=historial.enfermedad,
+                                          fecha_hist=historial.fecha_hist))
+        fecha1 = fecha2
+        time.sleep(espera)
+        fecha2 = time.time()
+
+
 def auto():
+    ip = str(raw_input("ip del hospital a conectar: "))
+    url = 'http://' + ip + ':8080/ObtenerDatosPaciente/ObtenerDatosPaciente?wsdl'
+    client = Client(url)
+    client.set_options(timeout=300)
 
+    espera = input("tiempo entre actualizaciones (segundos): ")
 
+    t = threading.Thread(target=automatico(client, espera))
+    t.setDaemon(True)
+    t.start()
     main()
 
 
 def main():
+
     print "Base de Datos Centralizada"
     print "Ingrese opcion:"
     print "1. Solicitar datos de un paciente"
