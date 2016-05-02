@@ -9,6 +9,7 @@ import traceback as tb
 import suds.metrics as metrics
 from suds import WebFault
 from suds.client import Client
+from suds.wsse import *
 import json
 db = dataset.connect('postgresql://postgres:postgres@localhost:5432/hospitales')
 
@@ -28,7 +29,7 @@ class Historial(object):
                     for k, v in self.__dict__.items() if not k.startswith("_")]
         return "{}(\n{})".format(self.__class__.__name__, '\n'.join(fields))
 
-from suds.wsse import *
+
 
 
 try:
@@ -84,7 +85,8 @@ try:
 
         t_historiales.insert(dict(ci_paciente= id, hospital=r['hospital'],
                                   responsable= r['responsable'], sintomas=r['sintomas'],
-                                  diagnostico= r['diagnostico'], enfermedad= r['enfermedad'], fecha_hist=r['fecha_hist']))
+                                  diagnostico= r['diagnostico'], enfermedad= r['enfermedad'],
+                                  fecha_hist=r['fecha_hist']))
 
 
     """
@@ -101,7 +103,8 @@ try:
 
             t_historiales.insert(dict(ci_paciente=historial.ci_paciente, hospital=historial.hospital,
                                       responsable=historial.responsable, sintomas=historial.sintomas,
-                                      diagnostico=historial.diagnostico, enfermedad=historial.enfermedad, fecha_hist = historial.fecha_hist))
+                                      diagnostico=historial.diagnostico, enfermedad=historial.enfermedad,
+                                      fecha_hist = historial.fecha_hist))
 
     """
     La seccion de abajo se usa para solicitar el ultimo historial de la persona segun su CI.
@@ -115,7 +118,8 @@ try:
 
         t_historiales.insert(dict(ci_paciente=id, hospital=r3['hospital'],
                                   responsable=r3['responsable'], sintomas=r3['sintomas'],
-                                  diagnostico=r3['diagnostico'], enfermedad=r3['enfermedad'], fecha_hist=r3['fecha_hist']))
+                                  diagnostico=r3['diagnostico'], enfermedad=r3['enfermedad'],
+                                  fecha_hist=r3['fecha_hist']))
 
 
 except WebFault, f:
