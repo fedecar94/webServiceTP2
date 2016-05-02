@@ -17,7 +17,6 @@ import javax.ejb.Stateless;
 @WebService(serviceName = "ObtenerDatosPaciente")
 @Stateless()
 public class ObtenerDatosPaciente {
-    String [] username = new String [2];
     
     /**
      * Esta es la clase que implementan todas las funciones del web service.
@@ -38,7 +37,10 @@ public class ObtenerDatosPaciente {
     */
     public String historialID(@WebParam(name = "id") int id, @WebParam(name = "fecha") double fecha, 
             @WebParam(name= "userid") String userid,@WebParam(name = "password") String password ) {
-        return GerenciadorBD.get_hist_id(id,fecha);
+        if (userid.equals(GerenciadorBD.val_username) && password.equals(GerenciadorBD.val_pass)){
+        return GerenciadorBD.get_hist_id(id,fecha);}
+        else 
+            return "Nombre de usuario o contraseña incorrecto/a";
     }
     @WebMethod(operationName = "actualizacion")
     /*Esta funcion recibe el numero de cedula de la persona y devuelve en una 
@@ -48,7 +50,11 @@ public class ObtenerDatosPaciente {
     
     public String actualizacion(@WebParam(name = "id") int id, 
             @WebParam(name= "userid") String userid,@WebParam(name = "password") String password) {
-        return GerenciadorBD.get_hist_act(id);
+        if (userid.equals(GerenciadorBD.val_username) && password.equals(GerenciadorBD.val_pass)){
+
+        return GerenciadorBD.get_hist_act(id);}
+        else 
+            return "Nombre de usuario o contraseña incorrecto/a";
     }
 
     @WebMethod(operationName = "historialFecha")
@@ -59,8 +65,10 @@ public class ObtenerDatosPaciente {
     
     public String historialFecha(@WebParam(name = "fecha1") Double fecha1, @WebParam(name = "fecha2") Double fecha2, 
             @WebParam(name= "userid") String userid,@WebParam(name = "password") String password) {
-        
-        return GerenciadorBD.get_hist_fecha(fecha1, fecha2);
+        if (userid.equals(GerenciadorBD.val_username) && password.equals(GerenciadorBD.val_pass)){
+        return GerenciadorBD.get_hist_fecha(fecha1, fecha2);}
+        else 
+            return "Nombre de usuario o contraseña incorrecto/a";
     }
 
     /**

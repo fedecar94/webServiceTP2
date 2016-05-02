@@ -15,6 +15,10 @@ import java.sql.Statement;
  * @author User
  */
 public class GerenciadorBD {
+    public static String val_username =  "admin";
+    public static String val_pass =  "admin";
+    
+    
     public static Connection bdconnect(String hospital){
         Connection c=null;
         try {
@@ -32,6 +36,7 @@ public class GerenciadorBD {
     public static String get_hist_id(int id, double fecha){    
         String hospital ="ips";
         Connection c=bdconnect(hospital);
+        
         Historial histo = new Historial();
         try {
         Statement stmt = c.createStatement();
