@@ -191,13 +191,45 @@ def auto():
     main()
 
 
+def actual():
+    client = conectar()
+
+    print "CI del paciente a consultar, ejemplo 1234567"
+    print "ingrese 0 para volver al menu"
+    id = input("CI: ")
+    if id == 0:
+        main()
+    while (datos(id, client)):
+        print "CI del paciente a consultar, ejemplo 1234567"
+        print "ingrese 0 para volver al menu"
+        id = input("CI: ")
+        if id == 0:
+            main()
+
+    r1 = client.service.actualizacion(id, userid, password)
+    t_historiales = db['historiales']
+
+    if r1 == "Nombre de usuario o contrasena incorrecto/a":
+        print("Nombre de usuario o contrasena incorrecto/a")
+    elif r1 == "No existen los historiales":
+        print r1
+    else:
+        r3 = json.loads(r1)
+        print "Datos actualuzados"
+        t_historiales.insert(dict(ci_paciente=id, hospital=r3['hospital'],
+                                  responsable=r3['responsable'], sintomas=r3['sintomas'],
+                                  diagnostico=r3['diagnostico'], enfermedad=r3['enfermedad'],
+                                  fecha_hist=r3['fecha_hist']))
+
+
 def main():
 
     print "Base de Datos Centralizada"
     print "Ingrese opcion:"
-    print "1. Solicitar datos de un paciente"
+    print "1. Solicitar dato de un paciente"
     print "2. Solicitar datos en un rango de tiempo"
     print "3. Configurar Autosincronizacion"
+    print "4. Solicitar actuaizacion de historial"
     print "0. Terminar ejecucion"
     op = input("opcion: ")
 
@@ -209,6 +241,9 @@ def main():
 
     elif op == 3:
         auto()
+
+    elif op == 4:
+        actual()
 
     elif op ==0:
         print "Terminando..."
